@@ -136,6 +136,10 @@ type QueryResult<Data, Params> = QueryState<Data, Params> & {
    *  defines a useQuery hook
    */
   fetch: QueryFetch<Data, Params>;
+  // /**
+  //  * `reset` sets the QueryState back to the original values passed in to the useQuery options
+  //  */
+  // reset: () => void;
   /**
    * this is generally useful for testing, you can also use it to wipe the state of the hook
    */
@@ -323,6 +327,9 @@ export function useQuery<D, P>({
     if (cache) cachedData = JSON.parse(cache);
   }
 
+  // TODO: implement this
+  // const reset = useCallback(() => dispatch({ type: ACTION.RESET }), [dispatch]);
+
   return {
     isLoading,
     endpoint,
@@ -333,5 +340,6 @@ export function useQuery<D, P>({
     error,
     errorCode,
     dispatch,
+    // reset,
   };
 }
