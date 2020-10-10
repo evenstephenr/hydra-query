@@ -2,7 +2,9 @@
 
 `hydra-query` is a react-powered module meant to be used to fetch and set external data into your React application.
 
-This project was inspired by the API design of Tanner Linsley's [react-query](https://github.com/tannerlinsley/react-query).
+This project was inspired by the API design of Tanner Linsley's [react-query](https://github.com/tannerlinsley/react-query). **I do not recommend using this project instead of `react-query`**, I wanted to challenge myself to try and build my own React-based external data module.
+
+Hopefully this project might inspire you to build your own, as well!
 
 ## API
 
@@ -55,13 +57,16 @@ useQuery({
   /**
    * (optional) withCache will save a cached version of the data returned on every request to localStorage.
    *
-   * When you have 'withCache' defined, it will optimistically render the data current in the cache,
-   *  if there is data present, before refreshing when new data is returned from the request.
+   * When you have 'withCache' defined, it will optimistically render the data present in the cache,
+   *  if any, before refreshing when new data is returned from the request.
    * */
   withCache: "randomuser-demo",
   /**
-   * (optional) by default, useQuery uses the fetch API provided by most modern browsers. You can provide your own
-   *  asynchronous fetch utility here instead.
+   * (optional) by default, useQuery uses the fetch API provided by most modern browsers.
+   *
+   *  You can provide your own asynchronous fetch utility here instead, if you choose! Just make sure
+   *  it follows the same API design and logic as the browser fetch api
+   *  (https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
    * */
   requestUtil: (url, options) => new Promise((resolve, reject) => { ... })
 });
@@ -78,13 +83,14 @@ const {
   /** set to 'true' when the module is waiting for the result of an external request */
   isLoading,
   /**
-   * when errors are thrown by the external request (or the fetch utility) they should be caught by 'useQuery',
-   *  and any message found in the error will be available here
+   * when errors are thrown by the external request (or the fetch utility) they should
+   *  be caught by 'useQuery', and any message found in the error will be available here
    * */
   error,
   /**
-   * when errors are thrown by the external request (or the fetch utility) they should be caught by 'useQuery,
-   *  and any errorCode that's returned from the request will be available here
+   * when errors are thrown by the external request (or the fetch utility) they should
+   *  be caught by 'useQuery', and any errorCode (4xx, 5xx, etc.) returned from the request
+   *  will be available here
    * */
   errorCode,
   /**
@@ -108,9 +114,9 @@ const {
 
 ### useQuery fetch
 
-the `fetch` function returned by a useQuery hook triggers the actual retrieval of your remote data when it is called.
+The `fetch` function returned by a useQuery hook triggers the actual retrieval of your remote data when it is called. This is an asynchronous process, so you should be using this function anywhere else you would normally use a React Hook
 
-Because this function triggers an asynchronous process, you should call this function inside a React hook like `useEffect`.
+> Not a requirement, but I highly recommend using [`eslint-plugin-react-hooks`](https://www.npmjs.com/package/eslint-plugin-react-hooks) if you aren't already
 
 ```js
 import { useQuery } from "query";
@@ -122,20 +128,20 @@ useEffect(() => {
 }, [fetch]);
 ```
 
-the `fetch` function takes optional parameters to customize the behavior of your external request
+The `fetch` function takes optional parameters to customize the behavior of your external request
 
 ```js
 fetch({
   /**
-   * (optional) params allows you to pass in params directly to your request utility, which will be
+   * (optional) `params` allows you to pass in params directly to your request utility, which will be
    *  included with the params already set on your useQuery hook.
    *
-   * This is useful if you set a default param on useQuery (such as a limit param) and have a dynamic
-   *  param being referenced in an individual fetch (filters on a table, for example)
+   * This is useful if you set a default param on useQuery, such as a limit param, and have dynamic
+   *  params being referenced in an individual fetch by some UI component, such as filters on a table
    * */
   params,
   /**
-   * (optional) options refers to the RequestInit options passed into the fetch API on the actual request
+   * (optional) options refers to the RequestInit options passed into the requset utility
    *
    * These are the default options set (without any user input)
    *  {
@@ -147,8 +153,8 @@ fetch({
    *    cache: "no-cache",
    *  }
    *
-   *  Additional options passed into each individual fetch will be appended or override the default value,
-   *    like passing in { method: "POST", body: JSON.stringify({ ... }) }, for example
+   * Additional options passed into each individual request will be appended to or override the
+   *  default values, such as { method: "POST", body: JSON.stringify({ ... }) }
    * */
   options,
   /**
