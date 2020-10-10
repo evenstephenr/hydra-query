@@ -34,6 +34,7 @@ const mergeRequestOptions = (
   }, {});
 };
 
+// TODO: make this configurable by useQuery
 const setDefaultOptions = (): RequestInit => ({
   method: "GET",
   headers: {
@@ -247,7 +248,6 @@ export function useQuery<D, P>({
       config: {
         params?: P;
         options?: RequestInit;
-        forcedEndpoint?: string;
         onResponse?: (data: any) => Promise<{ data: D }>;
       } = {}
     ) => {
@@ -256,7 +256,7 @@ export function useQuery<D, P>({
         ...config?.params,
       };
       const requestUrl =
-        (config?.forcedEndpoint || endpoint) +
+        endpoint +
         URLformat({
           // @ts-ignore
           query: { ...queryParams },

@@ -53,13 +53,14 @@ useQuery({
     inc: "nat,name,location,email,picture",
   },
   /**
-   * withCache will save a cached version of the data returned on every request to localStorage. When
-   *  you have 'withCache' defined, it will optimistically render the data current in the cache, if there
-   *  is data present, before refreshing when new data is returned from the request.
+   * (optional) withCache will save a cached version of the data returned on every request to localStorage.
+   *
+   * When you have 'withCache' defined, it will optimistically render the data current in the cache,
+   *  if there is data present, before refreshing when new data is returned from the request.
    * */
   withCache: "randomuser-demo",
   /**
-   * by default, useQuery uses the fetch API provided by most modern browsers. You can provide your own
+   * (optional) by default, useQuery uses the fetch API provided by most modern browsers. You can provide your own
    *  asynchronous fetch utility here instead.
    * */
   requestUtil: (url, options) => new Promise((resolve, reject) => { ... })
@@ -103,6 +104,62 @@ const {
   /** the full url used in the previous 'fetch', useful for debugging */
   url,
 } = useQuery(...);
+```
+
+### useQuery fetch
+
+the `fetch` function returned by a useQuery hook triggers the actual retrieval of your remote data when it is called.
+
+Because this function triggers an asynchronous process, you should call this function inside a React hook like `useEffect`.
+
+```js
+import { useQuery } from "query";
+
+const { fetch } = useQuery(...);
+
+useEffect(() => {
+  fetch();
+}, [fetch]);
+```
+
+the `fetch` function takes optional parameters to customize the behavior of your external request
+
+```js
+fetch({
+  /**
+   * (optional) params allows you to pass in params directly to your request utility, which will be
+   *  included with the params already set on your useQuery hook.
+   *
+   * This is useful if you set a default param on useQuery (such as a limit param) and have a dynamic
+   *  param being referenced in an individual fetch (filters on a table, for example)
+   * */
+  params,
+  /**
+   * (optional) options refers to the RequestInit options passed into the fetch API on the actual request
+   *
+   * These are the default options set (without any user input)
+   *  {
+   *    method: "GET",
+   *    headers: {
+   *      "Content-Type": "application/json",
+   *    },
+   *    mode: "cors",
+   *    cache: "no-cache",
+   *  }
+   *
+   *  Additional options passed into each individual fetch will be appended or override the default value,
+   *    like passing in { method: "POST", body: JSON.stringify({ ... }) }, for example
+   * */
+  options,
+  /**
+   * (optional) onResponse is a callback wrapped in a Promise that is called, if it exists, immediately
+   *  before the response from your external source is mounted to useQuery.
+   *
+   * This means you can perform transformations, set your own metadata based on response data, call or
+   *  import other external sources based on response values, etc.
+   * */
+  onResponse,
+});
 ```
 
 ## What is this?
