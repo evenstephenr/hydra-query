@@ -24,7 +24,8 @@ const Showcase = ({ isLoading, error, errorCode, data }) => (
     )}
   </pre>
 );
-
+// TODO: add tabs for different 'modes', user input options (params, disable cache, etc.)
+// TODO: add additional debugging fields to useQuery for logging timings, age of cache, etc.
 export const App = () => {
   const { isLoading, data, error, errorCode, fetch } = useQuery({
     endpoint: "https://randomuser.me/api/",

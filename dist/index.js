@@ -171,7 +171,7 @@ function useQuery(_ref2) {
     }
 
     try {
-      var _config, _config2;
+      var _config;
 
       var mountData = function mountData(d) {
         if (withCache) {
@@ -186,28 +186,28 @@ function useQuery(_ref2) {
 
       var queryParams = _extends({}, params, (_config = config) === null || _config === void 0 ? void 0 : _config.params);
 
-      var requestUrl = (((_config2 = config) === null || _config2 === void 0 ? void 0 : _config2.forcedEndpoint) || endpoint) + URLformat({
+      var requestUrl = endpoint + URLformat({
         query: _extends({}, queryParams)
       });
       var defaultErrorMessage = "Sorry, we are unable to retrieve this data for you right now. Please try again later.";
       return Promise.resolve(_catch(function () {
-        var _config3;
+        var _config2;
 
         dispatch({
           type: exports.ACTION.REFRESH,
           url: requestUrl,
           params: params
         });
-        return Promise.resolve(requestUtil(requestUrl, (_config3 = config) === null || _config3 === void 0 ? void 0 : _config3.options)).then(function (response) {
+        return Promise.resolve(requestUtil(requestUrl, (_config2 = config) === null || _config2 === void 0 ? void 0 : _config2.options)).then(function (response) {
           var _exit = false;
 
           function _temp4(_result2) {
             return _exit ? _result2 : Promise.resolve(response.json()["catch"](function () {
               try {
                 return Promise.resolve(function () {
-                  var _config4;
+                  var _config3;
 
-                  if ((_config4 = config) === null || _config4 === void 0 ? void 0 : _config4.onResponse) {
+                  if ((_config3 = config) === null || _config3 === void 0 ? void 0 : _config3.onResponse) {
                     return Promise.resolve(config.onResponse(payload)).then(function (_ref3) {
                       var responseData = _ref3.data;
                       mountData(responseData || {});
@@ -226,9 +226,9 @@ function useQuery(_ref2) {
               }
 
               var _temp = function () {
-                var _config5;
+                var _config4;
 
-                if ((_config5 = config) === null || _config5 === void 0 ? void 0 : _config5.onResponse) {
+                if ((_config4 = config) === null || _config4 === void 0 ? void 0 : _config4.onResponse) {
                   return Promise.resolve(config.onResponse(payload)).then(function (_ref4) {
                     var responseData = _ref4.data;
                     mountData(responseData);

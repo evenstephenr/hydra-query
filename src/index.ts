@@ -34,7 +34,7 @@ const mergeRequestOptions = (
   }, {});
 };
 
-// TODO: make this configurable by useQuery
+// TODO: make the default options configurable by useQuery
 const setDefaultOptions = (): RequestInit => ({
   method: "GET",
   headers: {
@@ -80,6 +80,7 @@ type QueryProps<Params> = {
    * */
   withCache?: string;
   // TODO: add a flag here to 'cancel' requests (prevent data from updating if parent is unmounted)
+  //  - Should this be a base component you can pass reactnode children into?
 };
 /**
  * QueryState defines the stateful properties that are returned from every instance
@@ -137,6 +138,7 @@ type QueryResult<Data, Params> = QueryState<Data, Params> & {
    *  defines a useQuery hook
    */
   fetch: QueryFetch<Data, Params>;
+  // TODO: implement this
   // /**
   //  * `reset` sets the QueryState back to the original values passed in to the useQuery options
   //  */
@@ -224,6 +226,7 @@ export function useQuery<D, P>({
   params,
   requestUtil = request,
 }: QueryProps<P>): QueryResult<D, P> {
+  // TODO: allow users to replace or extend this reducer
   const reducer = useQueryReducer as (
     prev: QueryState<D, P>,
     action: QueryActions<D, P>
@@ -258,9 +261,12 @@ export function useQuery<D, P>({
       const requestUrl =
         endpoint +
         URLformat({
+          // TODO: fix this
           // @ts-ignore
           query: { ...queryParams },
         });
+      
+      // TODO: errors should not be implementation detail for hydra-query
       const defaultErrorMessage =
         "Sorry, we are unable to retrieve this data for you right now. Please try again later.";
 
